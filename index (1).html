@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d1b">
+  <meta name="description" content="Devesh Nanoskar — personal developer portfolio.">
+  <title>Devesh Nanoskar | Portfolio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    :root {
+      --accent-color: #2563EB;
+      --accent-rgb: 37, 99, 235;
+      --bg: #080d1b;
+      --text: #f4f7ff;
+      --muted: #9ba9c4;
+      --border: rgba(255,255,255,.12);
+      --glass: rgba(255,255,255,.055);
+      --shadow: 0 24px 80px rgba(0,0,0,.28);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+    body {
+      min-width: 320px; overflow-x: hidden; color: var(--text);
+      background:
+        radial-gradient(ellipse at 12% 8%, rgba(var(--accent-rgb),.19), transparent 32rem),
+        radial-gradient(ellipse at 88% 38%, rgba(85,112,220,.12), transparent 28rem),
+        linear-gradient(145deg,#080d1b 0%,#0a1020 52%,#080d1b 100%);
+      font-family: "Manrope", sans-serif; line-height: 1.65; cursor: none !important;
+    }
+    body::before {
+      content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.15;
+      background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+      background-size:54px 54px; mask-image:linear-gradient(to bottom,black,transparent 85%);
+    }
+    ::selection { background:var(--accent-color); color:#fff; }
+    a,button { color:inherit; cursor:none !important; }
+    a { text-decoration:none; }
+    button { font:inherit; }
+    img { display:block; max-width:100%; }
+    .cursor {
+      position:fixed; top:0; left:0; width:12px; height:12px; border-radius:50%;
+      background:var(--accent-color); pointer-events:none; z-index:99999;
+      transform:translate(-50%,-50%); box-shadow:0 0 22px rgba(var(--accent-rgb),.6);
+      transition:width .22s,height .22s,background .22s,border .22s;
+      mix-blend-mode:screen;
+    }
+    .cursor.is-hovering { width:42px; height:42px; background:rgba(var(--accent-rgb),.18); border:1px solid rgba(145,180,255,.9); }
+    .cursor.is-clicking { width:8px; height:8px; }
+    .container { width:min(1120px,calc(100% - 44px)); margin:0 auto; }
+    .glass {
+      background:linear-gradient(135deg,rgba(255,255,255,.085),rgba(255,255,255,.025));
+      border:1px solid var(--border); box-shadow:var(--shadow);
+      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    }
+    .topbar { position:fixed; z-index:1000; top:16px; left:0; width:100%; pointer-events:none; }
+    .nav {
+      pointer-events:auto; display:flex; justify-content:space-between; align-items:center;
+      padding:12px 18px; border-radius:18px; background:rgba(8,13,27,.76);
+      border:1px solid rgba(255,255,255,.1); backdrop-filter:blur(18px);
+    }
+    .brand { font-weight:800; letter-spacing:-.06em; font-size:1.08rem; }
+    .brand span { color:#75a2ff; }
+    .nav-links { display:flex; align-items:center; gap:27px; list-style:none; }
+    .nav-links a { color:var(--muted); font-size:.82rem; font-weight:700; transition:color .2s; }
+    .nav-links a:hover { color:#fff; }
+    .nav-cta,.button {
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      border:1px solid rgba(135,174,255,.45); border-radius:999px;
+      padding:11px 17px; background:rgba(var(--accent-rgb),.18);
+      color:#fff; font-size:.82rem; font-weight:800;
+      transition:transform .25s,background .25s,box-shadow .25s;
+    }
+    .nav-cta:hover,.button:hover { transform:translateY(-3px); background:rgba(var(--accent-rgb),.34); box-shadow:0 10px 30px rgba(var(--accent-rgb),.2); }
+    .menu-toggle { display:none; border:0; color:white; background:transparent; font-size:1.2rem; }
+    section { padding:112px 0; }
+    .hero { min-height:100vh; display:flex; align-items:center; padding-top:145px; padding-bottom:80px; }
+    .hero-grid { display:grid; grid-template-columns:1.2fr .8fr; align-items:center; gap:65px; }
+    .eyebrow { display:inline-flex; align-items:center; gap:9px; color:#a9c4ff; font:500 .73rem "DM Mono",monospace; letter-spacing:.12em; text-transform:uppercase; }
+    .eyebrow::before { content:""; width:24px; height:1px; background:var(--accent-color); }
+    h1 { margin:22px 0 18px; font-size:clamp(3.2rem,7.2vw,6.4rem); line-height:.99; letter-spacing:-.075em; font-weight:800; }
+    h1 .accent { color:#79a5ff; }
+    .hero-copy { max-width:600px; color:var(--muted); font-size:1.02rem; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:13px; margin-top:30px; }
+    .button.secondary { background:rgba(255,255,255,.04); border-color:var(--border); color:#dce6ff; }
+    .hero-meta { display:flex; gap:26px; flex-wrap:wrap; margin-top:40px; color:var(--muted-2); font: .72rem "DM Mono",monospace; text-transform:uppercase; letter-spacing:.08em; }
+    .hero-meta span { display:flex; align-items:center; gap:9px; }
+    .hero-meta i { color:#79a5ff; }
+    .profile-card { position:relative; border-radius:30px; padding:25px; min-height:390px; overflow:hidden; }
+    .profile-card::before,.profile-card::after { content:""; position:absolute; border-radius:50%; filter:blur(2px); pointer-events:none; }
+    .profile-card::before { width:230px;height:230px;right:-65px;top:-75px;background:rgba(var(--accent-rgb),.24); }
+    .profile-card::after { width:160px;height:160px;left:-70px;bottom:-65px;background:rgba(125,154,255,.12); }
+    .profile-inner { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; text-align:center; }
+    .avatar-wrap { width:146px;height:146px;border-radius:50%;padding:5px;border:1px solid rgba(140,177,255,.55);background:rgba(255,255,255,.08);margin:20px 0 18px; }
+    .avatar { width:100%;height:100%;border-radius:50%;object-fit:cover;background:#17284b; }
+    .avatar-fallback { display:grid;place-items:center;width:100%;height:100%;border-radius:50%;font-size:3rem;font-weight:800;color:#bcd1ff;background:linear-gradient(135deg,#16336d,#10192e); }
+    .profile-name { font-size:1.35rem;font-weight:800;letter-spacing:-.04em; }
+    .profile-handle { color:var(--muted);font: .75rem "DM Mono",monospace;margin-top:3px; }
+    .status { display:inline-flex;align-items:center;gap:8px;margin-top:17px;padding:7px 12px;border-radius:999px;background:rgba(48,190,128,.1);border:1px solid rgba(48,190,128,.22);color:#9ce7c3;font-size:.72rem;font-weight:700; }
+    .status-dot { width:7px;height:7px;border-radius:50%;background:#43d69a;box-shadow:0 0 12px #43d69a; }
+    .stats { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;margin-top:25px; }
+    .stat { padding:12px 7px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07); }
+    .stat strong { display:block;font-size:1.12rem; }
+    .stat span { display:block;color:var(--muted-2);font: .62rem "DM Mono",monospace;text-transform:uppercase;letter-spacing:.05em; }
+    .section-head { display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:38px; }
+    .section-kicker { color:#8db2ff;font: .72rem "DM Mono",monospace;text-transform:uppercase;letter-spacing:.13em; }
+    h2 { font-size:clamp(2.1rem,4vw,3.25rem);line-height:1.1;letter-spacing:-.065em;margin-top:9px; }
+    .section-desc { color:var(--muted);max-width:420px;font-size:.9rem; }
+    .about-grid { display:grid;grid-template-columns:1fr 1fr;gap:20px; }
+    .about-card { padding:28px;border-radius:var(--radius); }
+    .about-card h3 { font-size:1.05rem;margin-bottom:12px; }
+    .about-card p { color:var(--muted);font-size:.9rem; }
+    .about-icon { display:grid;place-items:center;width:42px;height:42px;border-radius:13px;margin-bottom:19px;color:#a8c5ff;background:rgba(var(--accent-rgb),.16);border:1px solid rgba(var(--accent-rgb),.25); }
+    .skill-list { display:flex;flex-wrap:wrap;gap:9px;margin-top:18px; }
+    .chip { padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.045);color:#c8d4ec;font: .7rem "DM Mono",monospace; }
+    .repo-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:17px; }
+    .repo-card { min-height:230px;padding:22px;border-radius:20px;position:relative;transform-style:preserve-3d;transition:border-color .25s,background .25s; }
+    .repo-card:hover { border-color:rgba(113,158,255,.42);background:linear-gradient(135deg,rgba(37,99,235,.13),rgba(255,255,255,.035)); }
+    .repo-top { display:flex;justify-content:space-between;align-items:center;margin-bottom:19px;color:#8db2ff; }
+    .repo-top i { font-size:1.05rem; }
+    .repo-name { font-size:1rem;font-weight:800;overflow-wrap:anywhere; }
+    .repo-name a:hover { color:#9fc0ff; }
+    .repo-desc { min-height:57px;margin-top:9px;color:var(--muted);font-size:.78rem;line-height:1.6; }
+    .repo-bottom { display:flex;align-items:center;gap:14px;margin-top:20px;color:var(--muted-2);font: .68rem "DM Mono",monospace; }
+    .repo-bottom span { display:flex;align-items:center;gap:6px; }
+    .language-dot { width:7px;height:7px;border-radius:50%;background:#79a5ff; }
+    .loading,.empty-state { grid-column:1/-1;text-align:center;padding:35px;border-radius:18px;color:var(--muted); }
+    .error-note { color:#f3bd8d;font-size:.8rem;margin-top:12px; }
+    .contact-panel { display:flex;align-items:center;justify-content:space-between;gap:30px;padding:36px;border-radius:26px; }
+    .contact-panel p { color:var(--muted);max-width:560px;margin-top:12px;font-size:.9rem; }
+    .contact-actions { display:flex;gap:11px;flex-wrap:wrap; }
+    footer { padding:30px 0 45px;color:var(--muted-2);font: .7rem "DM Mono",monospace; }
+    .footer-inner { display:flex;justify-content:space-between;gap:18px;align-items:center;border-top:1px solid rgba(255,255,255,.08);padding-top:24px; }
+    .socials { display:flex;gap:16px; }
+    .socials a { color:var(--muted);transition:color .2s,transform .2s; }
+    .socials a:hover { color:#fff;transform:translateY(-2px); }
+    .reveal { opacity:0; transform:translateY(24px); }
+    .muted-note { color:var(--muted-2);font-size:.75rem;margin-top:14px; }
+    @media (max-width:900px) {
+      .hero-grid { grid-template-columns:1fr .82fr;gap:28px; }
+      .repo-grid { grid-template-columns:repeat(2,1fr); }
+      .nav-links { gap:16px; }
+    }
+    @media (max-width:700px) {
+      body { cursor:auto !important; }
+      a,button { cursor:pointer !important; }
+      .cursor { display:none; }
+      .container { width:min(100% - 32px,560px); }
+      .topbar { top:9px; }
+      .nav { padding:12px 14px; }
+      .menu-toggle { display:block; }
+      .nav-cta { display:none; }
+      .nav-links {
+        display:none;position:absolute;top:62px;left:0;right:0;padding:18px;
+        border:1px solid var(--border);border-radius:17px;background:rgba(8,13,27,.96);
+        flex-direction:column;align-items:stretch;gap:14px;box-shadow:var(--shadow);
+      }
+      .nav-links.open { display:flex; }
+      .nav-links a { display:block;padding:5px 3px; }
+      section { padding:82px 0; }
+      .hero { min-height:auto;padding-top:145px; }
+      .hero-grid { grid-template-columns:1fr; }
+      .hero-copy { font-size:.94rem; }
+      .profile-card { max-width:440px;width:100%;margin:18px auto 0;min-height:360px; }
+      .section-head { display:block; }
+      .section-desc { margin-top:15px; }
+      .about-grid { grid-template-columns:1fr; }
+      .repo-grid { grid-template-columns:1fr; }
+      .repo-card { min-height:205px; }
+      .contact-panel { align-items:flex-start;flex-direction:column;padding:26px; }
+      .footer-inner { align-items:flex-start;flex-direction:column; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      *,*::before,*::after { scroll-behavior:auto !important;transition:none !important; }
+      .reveal { opacity:1;transform:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cursor" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <nav class="nav container" aria-label="Main navigation">
+      <a class="brand" href="#home">DN<span>.</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a class="nav-cta" href="#contact">Let's connect <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="eyebrow">Personal portfolio</div>
+          <h1>Hi, I'm<br><span class="accent">Devesh</span><br>Nanoskar<span class="accent">.</span></h1>
+          <p class="hero-copy">Welcome to my digital space. I'm building my journey in technology, exploring ideas, and turning them into practical projects. Take a look at my work and connect with me.</p>
+          <div class="hero-actions">
+            <a class="button" href="#projects">Explore my work <i class="fa-solid fa-arrow-down"></i></a>
+            <a class="button secondary" href="https://www.linkedin.com/in/devesh-nanoskar-863b06401/" target="_blank" rel="noopener noreferrer">LinkedIn <i class="fa-brands fa-linkedin-in"></i></a>
+          </div>
+          <div class="hero-meta">
+            <span><i class="fa-brands fa-github"></i> Open-source profile</span>
+            <span><i class="fa-solid fa-location-dot"></i> India</span>
+          </div>
+        </div>
+
+        <aside class="profile-card glass" aria-label="GitHub profile summary">
+          <div class="profile-inner">
+            <div class="eyebrow">GitHub profile</div>
+            <div class="avatar-wrap" id="avatarWrap">
+              <div class="avatar-fallback" id="avatarFallback">DN</div>
+              <img class="avatar" id="githubAvatar" alt="GitHub profile avatar" hidden>
+            </div>
+            <div class="profile-name" id="githubName">Devesh Nanoskar</div>
+            <div class="profile-handle" id="githubHandle">@DeveshNanoskar</div>
+            <div class="status"><span class="status-dot"></span> Profile connected</div>
+            <div class="stats">
+              <div class="stat"><strong id="repoCount">—</strong><span>Repositories</span></div>
+              <div class="stat"><strong id="followerCount">—</strong><span>Followers</span></div>
+              <div class="stat"><strong id="followingCount">—</strong><span>Following</span></div>
+            </div>
+            <p class="error-note" id="githubError" role="status"></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><div class="section-kicker">01 / About</div><h2>A little about me.</h2></div>
+          <p class="section-desc">A starting point for my professional story. This section can be updated as I add more about my education, experience, and goals.</p>
+        </div>
+        <div class="about-grid">
+          <article class="about-card glass reveal">
+            <div class="about-icon"><i class="fa-solid fa-user-astronaut"></i></div>
+            <h3>My introduction</h3>
+            <p>I'm Devesh Nanoskar. I enjoy exploring technology and learning by building. I'm interested in creating useful digital experiences, improving my skills, and contributing to meaningful projects.</p>
+          </article>
+          <article class="about-card glass reveal">
+            <div class="about-icon"><i class="fa-solid fa-code"></i></div>
+            <h3>What I'm exploring</h3>
+            <p>This portfolio highlights repositories from my GitHub profile. As my skills and projects grow, this space can showcase the tools, technologies, and work I'm most proud of.</p>
+            <div class="skill-list">
+              <span class="chip">Development</span><span class="chip">Problem solving</span><span class="chip">Learning</span><span class="chip">Building projects</span>
+            </div>
+          </article>
+        </div>
+        <p class="muted-note">Tip: Replace the introductory text above with your own education, technical skills, achievements, and career goals when you're ready.</p>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><div class="section-kicker">02 / Selected work</div><h2>Projects from GitHub.</h2></div>
+          <p class="section-desc">Your public repositories are loaded directly from GitHub and sorted by star count.</p>
+        </div>
+        <div class="repo-grid" id="repoGrid" aria-live="polite">
+          <div class="loading glass"><i class="fa-solid fa-circle-notch fa-spin"></i> Fetching public repositories…</div>
+        </div>
+        <p class="muted-note">Showing up to six public repositories. GitHub's unauthenticated API has rate limits, so data may occasionally be unavailable.</p>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="contact-panel glass reveal">
+          <div>
+            <div class="section-kicker">03 / Get in touch</div>
+            <h2>Let's connect.</h2>
+            <p>Have an idea, opportunity, or just want to say hello? Reach out through LinkedIn or explore my work on GitHub.</p>
+          </div>
+          <div class="contact-actions">
+            <a class="button" href="https://www.linkedin.com/in/devesh-nanoskar-863b06401/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+            <a class="button secondary" href="https://github.com/DeveshNanoskar" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Devesh Nanoskar. Built with curiosity.</span>
+      <div class="socials">
+        <a href="https://github.com/DeveshNanoskar" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/devesh-nanoskar-863b06401/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Portfolio configuration: update this username if your GitHub handle changes.
+    const GITHUB_USERNAME = "DeveshNanoskar";
+    const LINKEDIN_URL = "https://www.linkedin.com/in/devesh-nanoskar-863b06401/";
+
+    // Custom cursor: smoothly follows the pointer and expands over interactive elements.
+    const cursor = document.querySelector(".cursor");
+    if (cursor && window.matchMedia("(pointer: fine)").matches) {
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let cursorX = mouseX;
+      let cursorY = mouseY;
+      window.addEventListener("mousemove", (event) => {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+      });
+      const renderCursor = () => {
+        cursorX += (mouseX - cursorX) * 0.2;
+        cursorY += (mouseY - cursorY) * 0.2;
+        cursor.style.left = `${cursorX}px`;
+        cursor.style.top = `${cursorY}px`;
+        requestAnimationFrame(renderCursor);
+      };
+      renderCursor();
+      document.querySelectorAll("a, button, .repo-card").forEach((item) => {
+        item.addEventListener("mouseenter", () => cursor.classList.add("is-hovering"));
+        item.addEventListener("mouseleave", () => cursor.classList.remove("is-hovering"));
+      });
+      window.addEventListener("mousedown", () => cursor.classList.add("is-clicking"));
+      window.addEventListener("mouseup", () => cursor.classList.remove("is-clicking"));
+    }
+
+    // Mobile navigation.
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+    });
+    navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+      navLinks.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+    }));
+
+    // Load GitHub profile and public repositories using GitHub's public REST API.
+    const numberFormat = (value) => new Intl.NumberFormat().format(value ?? 0);
+    const repoGrid = document.getElementById("repoGrid");
+    const githubError = document.getElementById("githubError");
+
+    function renderRepositories(repositories) {
+      const sorted = repositories
+        .filter((repo) => !repo.fork)
+        .sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0))
+        .slice(0, 6);
+
+      if (!sorted.length) {
+        repoGrid.innerHTML = '<div class="empty-state glass">No public repositories were found yet.</div>';
+        return;
+      }
+
+      repoGrid.innerHTML = sorted.map((repo) => {
+        const description = repo.description || "No description added yet.";
+        const language = repo.language || "Not specified";
+        return `
+          <article class="repo-card glass reveal">
+            <div class="repo-top"><i class="fa-regular fa-folder-open"></i><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+            <h3 class="repo-name"><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${escapeHTML(repo.name)}</a></h3>
+            <p class="repo-desc">${escapeHTML(description)}</p>
+            <div class="repo-bottom">
+              <span><i class="language-dot"></i>${escapeHTML(language)}</span>
+              <span><i class="fa-solid fa-star"></i>${numberFormat(repo.stargazers_count)}</span>
+              <span><i class="fa-solid fa-code-fork"></i>${numberFormat(repo.forks_count)}</span>
+            </div>
+          </article>`;
+      }).join("");
+
+      initScrollAnimations();
+      initCardTilt();
+      // Make dynamically added cards respond to the custom cursor too.
+      if (cursor && window.matchMedia("(pointer: fine)").matches) {
+        repoGrid.querySelectorAll(".repo-card").forEach((card) => {
+          card.addEventListener("mouseenter", () => cursor.classList.add("is-hovering"));
+          card.addEventListener("mouseleave", () => cursor.classList.remove("is-hovering"));
+        });
+      }
+    }
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      })[char]);
+    }
+
+    async function loadGitHubData() {
+      const profileURL = `https://api.github.com/users/${encodeURIComponent(GITHUB_USERNAME)}`;
+      const reposURL = `${profileURL}/repos?per_page=100&sort=updated`;
+      try {
+        const [profileResponse, reposResponse] = await Promise.all([
+          fetch(profileURL, { headers: { Accept: "application/vnd.github+json" } }),
+          fetch(reposURL, { headers: { Accept: "application/vnd.github+json" } })
+        ]);
+        if (!profileResponse.ok) throw new Error(`GitHub profile request failed (${profileResponse.status}).`);
+        if (!reposResponse.ok) throw new Error(`GitHub repositories request failed (${reposResponse.status}).`);
+
+        const [profile, repositories] = await Promise.all([profileResponse.json(), reposResponse.json()]);
+        document.getElementById("githubName").textContent = profile.name || profile.login;
+        document.getElementById("githubHandle").textContent = `@${profile.login}`;
+        document.getElementById("repoCount").textContent = numberFormat(profile.public_repos);
+        document.getElementById("followerCount").textContent = numberFormat(profile.followers);
+        document.getElementById("followingCount").textContent = numberFormat(profile.following);
+
+        const avatar = document.getElementById("githubAvatar");
+        avatar.src = profile.avatar_url;
+        avatar.hidden = false;
+        document.getElementById("avatarFallback").hidden = true;
+        avatar.onerror = () => {
+          avatar.hidden = true;
+          document.getElementById("avatarFallback").hidden = false;
+        };
+
+        renderRepositories(repositories);
+      } catch (error) {
+        console.error("GitHub API error:", error);
+        githubError.textContent = "GitHub data couldn't be loaded. Please try refreshing the page.";
+        repoGrid.innerHTML = '<div class="empty-state glass">Repositories are temporarily unavailable. Visit <a href="https://github.com/DeveshNanoskar" target="_blank" rel="noopener noreferrer" style="color:#9fc0ff">GitHub</a> to see the latest work.</div>';
+      }
+    }
+
+    // 3D tilt effect for project cards.
+    function initCardTilt() {
+      if (!window.matchMedia("(pointer: fine)").matches) return;
+      document.querySelectorAll(".repo-card").forEach((card) => {
+        if (card.dataset.tiltReady) return;
+        card.dataset.tiltReady = "true";
+        card.addEventListener("mousemove", (event) => {
+          const rect = card.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width;
+          const y = (event.clientY - rect.top) / rect.height;
+          const rotateY = (x - .5) * 8;
+          const rotateX = (.5 - y) * 8;
+          card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
+        });
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "perspective(900px) rotateX(0) rotateY(0) translateY(0)";
+        });
+      });
+    }
+
+    // GSAP hero entrance and scroll-triggered reveals; IntersectionObserver fallback included.
+    function initScrollAnimations() {
+      const revealItems = document.querySelectorAll(".reveal:not(.is-visible)");
+      if (window.gsap && window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+        revealItems.forEach((element) => {
+          element.classList.add("is-visible");
+          gsap.fromTo(element, { autoAlpha: 0, y: 26 }, {
+            autoAlpha: 1, y: 0, duration: .75, ease: "power3.out",
+            scrollTrigger: { trigger: element, start: "top 88%", once: true }
+          });
+        });
+      } else {
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = "1";
+              entry.target.style.transform = "translateY(0)";
+              entry.target.classList.add("is-visible");
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: .12 });
+        revealItems.forEach((element) => observer.observe(element));
+      }
+    }
+
+    function runHeroAnimation() {
+      if (!window.gsap || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.querySelectorAll(".hero-content, .profile-card").forEach((el) => {
+          el.style.opacity = "1";
+          el.style.transform = "none";
+        });
+        return;
+      }
+      gsap.from(".hero-content > *", {
+        opacity: 0, y: 24, duration: .8, stagger: .12, ease: "power3.out", delay: .15
+      });
+      gsap.from(".profile-card", {
+        opacity: 0, y: 28, scale: .96, duration: 1, ease: "power3.out", delay: .4
+      });
+    }
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    runHeroAnimation();
+    initScrollAnimations();
+    loadGitHubData();
+  </script>
+</body>
+</html>
